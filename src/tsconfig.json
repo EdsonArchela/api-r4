@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../dist/",
+    "resolveJsonModule": true
+  },
+  "references": [
+    // this is how we declare a dependency from
+    { "path": "../tsconfig.json" } // this project to the one at the root dir`
+  ]
+}
