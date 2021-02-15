@@ -4,12 +4,14 @@ import IUsersRepository from '../repositories/IUsersRepository';
 
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import User from '../infra/typeorm/entities/User';
+import IRolesRepository from '../repositories/IRolesRepository';
 
 interface IRequest {
   name: string;
   email: string;
   password: string;
   comission?: number;
+  roles: string[];
 }
 
 @injectable()
@@ -17,6 +19,9 @@ class CreateUserService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('RolesRepository')
+    private RolesRepository: IRolesRepository,
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
@@ -27,12 +32,17 @@ class CreateUserService {
     email,
     password,
     comission,
+    roles,
   }: IRequest): Promise<User> {
     const checkUserExists = await this.usersRepository.findByEmail(email);
 
     if (checkUserExists) {
-      throw new AppError('Email address already used');
+      throw new AppError('E-mail já foi cadastrado');
     }
+
+    const existsRoles = await this.RolesRepository.findThose(roles);
+
+    if (!existsRoles) throw new AppError('Não pude encontrar seu Role');
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
@@ -41,6 +51,7 @@ class CreateUserService {
       email,
       password: hashedPassword,
       comission,
+      roles: existsRoles,
     });
 
     return user;
