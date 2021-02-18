@@ -21,9 +21,8 @@ jobs:
     - uses: actions/checkout@v2
     
     # Instalar as dependências do NPM/Yarn
-    - uses: actions/chekout@v1
     - name: Setup Node.js environment
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v1.4.3
       with:
        node-version: 12.x
        
