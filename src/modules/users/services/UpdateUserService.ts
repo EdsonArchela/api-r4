@@ -62,6 +62,7 @@ class UpdateUserService {
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
+    console.log(existsRoles);
     const updateduser = await this.usersRepository.create({
       ...user,
       name,

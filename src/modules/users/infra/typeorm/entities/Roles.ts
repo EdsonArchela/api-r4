@@ -26,7 +26,7 @@ class Roles {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToMany(() => Permission)
+  @ManyToMany(() => Permission, { eager: true })
   @JoinTable({
     name: 'permissions_roles',
     joinColumns: [{ name: 'role_id' }],

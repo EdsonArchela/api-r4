@@ -40,7 +40,7 @@ class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToMany(() => Roles, { eager: true })
+  @ManyToMany(() => Roles, { eager: true, cascade: true })
   @JoinTable({
     name: 'users_roles',
     joinColumns: [{ name: 'user_id' }],
