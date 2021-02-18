@@ -5,6 +5,6 @@ export default interface ICreateUserDTO {
   email: string;
   password: string;
   comission?: number;
-  roles: Roles[];
+  roles?: Roles[];
   agendor_id: string;
 }

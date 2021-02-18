@@ -19,4 +19,5 @@ export default function is(roles: string[]) {
 
     return next();
   };
+  return roleAuthorized;
 }

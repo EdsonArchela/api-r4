@@ -2,14 +2,16 @@ import { Router } from 'express';
 import { celebrate, Segments, Joi } from 'celebrate';
 import UsersController from '../controllers/UsersController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+import is from '../middlewares/permissions';
 
 const usersRouter = Router();
 const usersController = new UsersController();
 
+usersRouter.use(ensureAuthenticated);
+
 usersRouter.post(
   '/',
+  is(['ROLE_ADMIN']),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
@@ -21,8 +23,6 @@ usersRouter.post(
   }),
   usersController.create,
 );
-
-usersRouter.use(ensureAuthenticated);
 
 usersRouter.get(
   '/organization',

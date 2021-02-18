@@ -50,8 +50,11 @@ class CreateUserService {
       throw new AppError('E-mail já foi cadastrado');
     }
 
-    const existsRoles = await this.RolesRepository.findThose(roles);
-    if (!existsRoles) throw new AppError('Não pude encontrar seu Role');
+    let existsRoles;
+    if (roles) {
+      existsRoles = await this.RolesRepository.findThose(roles);
+      if (!existsRoles) throw new AppError('Não pude encontrar seu Role');
+    }
 
     const users: UsersList = await agendor_api.get('users');
     const agendorId = users.data.data.find(
