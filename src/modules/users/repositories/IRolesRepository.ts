@@ -6,4 +6,5 @@ export default interface IRolesRepository {
   save(data: Roles): Promise<Roles>;
   findByName(name: string): Promise<Roles | undefined>;
   findThose(ids: string[]): Promise<Roles[] | undefined>;
+  findAll(): Promise<Roles[]>;
 }

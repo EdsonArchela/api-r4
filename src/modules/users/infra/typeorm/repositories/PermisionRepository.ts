@@ -23,6 +23,10 @@ class PermissionRepository implements IPermissionRepository {
     return this.ormRepository.save(data);
   }
 
+  public async findAll(): Promise<Permission[]> {
+    return await this.ormRepository.find();
+  }
+
   public async findByName(name: string): Promise<Permission | undefined> {
     return await this.ormRepository.findOne({ where: { name } });
   }

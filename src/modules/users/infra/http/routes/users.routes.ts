@@ -24,6 +24,20 @@ usersRouter.post(
   usersController.create,
 );
 
+usersRouter.patch(
+  '/update',
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string(),
+      email: Joi.string().email(),
+      password: Joi.string(),
+      comission: Joi.number(),
+      roles: Joi.array().items(Joi.string()),
+    },
+  }),
+  usersController.update,
+);
+
 usersRouter.get(
   '/organization',
   celebrate({

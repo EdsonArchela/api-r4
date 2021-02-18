@@ -6,4 +6,5 @@ export default interface IPermissionRepository {
   save(data: Permission): Promise<Permission>;
   findByName(name: string): Promise<Permission | undefined>;
   findThose(ids: string[]): Promise<Permission[] | undefined>;
+  findAll(): Promise<Permission[]>;
 }

@@ -16,4 +16,6 @@ permissionRouter.post(
   permissionController.create,
 );
 
+permissionRouter.get('/', permissionController.index);
+
 export default permissionRouter;

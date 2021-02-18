@@ -17,4 +17,6 @@ rolesRouter.post(
   rolesController.create,
 );
 
+rolesRouter.get('/', rolesController.index);
+
 export default rolesRouter;

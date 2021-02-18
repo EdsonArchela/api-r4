@@ -25,6 +25,10 @@ class RolesRepository implements IRolesRepository {
     return this.ormRepository.save(data);
   }
 
+  public async findAll(): Promise<Roles[]> {
+    return await this.ormRepository.find();
+  }
+
   public async findByName(name: string): Promise<Roles | undefined> {
     return await this.ormRepository.findOne({ where: { name } });
   }

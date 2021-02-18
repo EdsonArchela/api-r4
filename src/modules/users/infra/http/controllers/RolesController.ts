@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateRolesService from '../../../services/CreateRolesService';
+import ListRolesService from '../../../services/ListRolesService';
 
 class RolesController {
   async create(request: Request, response: Response) {
@@ -15,6 +16,14 @@ class RolesController {
     });
 
     return response.json(roles);
+  }
+
+  public async index(request: Request, response: Response) {
+    const rolesService = container.resolve(ListRolesService);
+
+    const permissions = await rolesService.execute();
+
+    return response.json(permissions);
   }
 }
 export default RolesController;
