@@ -45,7 +45,7 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne(id, { relations: ['roles'] });
+    const user = await this.ormRepository.findOne(id);
     return user;
   }
 }

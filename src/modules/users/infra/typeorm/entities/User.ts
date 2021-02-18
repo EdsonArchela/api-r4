@@ -46,10 +46,10 @@ class User {
     joinColumns: [{ name: 'user_id' }],
     inverseJoinColumns: [{ name: 'role_id' }],
   })
-  roles: Roles[];
+  roles: Roles[] | undefined;
 
   @OneToMany(type => Deal, deal => deal.user_id)
-  deals: Deal[];
+  deals: Deal[] | undefined;
 }
 
 export default User;

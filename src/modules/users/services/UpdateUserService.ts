@@ -47,6 +47,8 @@ class UpdateUserService {
   }: IRequest): Promise<User> {
     const user = await this.usersRepository.findByEmail(email);
 
+    if (!user) throw new AppError('Usuário não encontrado');
+
     let existsRoles;
     if (roles) {
       existsRoles = await this.RolesRepository.findThose(roles);
@@ -63,17 +65,17 @@ class UpdateUserService {
     const hashedPassword = await this.hashProvider.generateHash(password);
 
     console.log(existsRoles);
-    const updateduser = await this.usersRepository.create({
+    const updatedUser = await this.usersRepository.save({
       ...user,
       name,
       email,
       password: hashedPassword,
-      comission,
+      comission: comission || 0,
       roles: existsRoles,
       agendor_id: agendorId.id,
     });
 
-    return updateduser;
+    return updatedUser;
   }
 }
 
