@@ -17,12 +17,14 @@ class UsersRepository implements IUsersRepository {
     email,
     password,
     comission,
+    agendor_id,
   }: ICreateUserDTO): Promise<User> {
     const user = this.ormRepository.create({
       name,
       email,
       password,
       comission,
+      agendor_id,
     });
 
     await this.ormRepository.save(user);

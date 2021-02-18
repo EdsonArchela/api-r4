@@ -8,6 +8,8 @@ import IPermissionRepository from '../../modules/users/repositories/IPermissionR
 import PermissionRepository from '../../modules/users/infra/typeorm/repositories/PermisionRepository';
 import IRolesRepository from '../../modules/users/repositories/IRolesRepository';
 import RolesRepository from '../../modules/users/infra/typeorm/repositories/RolesRepository';
+import IDealsRepository from '../../modules/deals/repositories/IDealsRepository';
+import DealsRepository from '../../modules/deals/infra/typeorm/repositories/DealsRepository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -22,4 +24,9 @@ container.registerSingleton<IPermissionRepository>(
 container.registerSingleton<IRolesRepository>(
   'RolesRepository',
   RolesRepository,
+);
+
+container.registerSingleton<IDealsRepository>(
+  'DealsRepository',
+  DealsRepository,
 );

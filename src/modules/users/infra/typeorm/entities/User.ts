@@ -6,9 +6,12 @@ import {
   UpdateDateColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import Roles from './Roles';
+import Deal from '../../../../deals/infra/typeorm/entities/Deal';
 
 @Entity('users')
 class User {
@@ -24,6 +27,9 @@ class User {
   @Column()
   @Exclude()
   password: string;
+
+  @Column()
+  agendor_id: string;
 
   @Column({ nullable: true })
   comission: number;
@@ -41,6 +47,9 @@ class User {
     inverseJoinColumns: [{ name: 'role_id' }],
   })
   roles: Roles[];
+
+  @OneToMany(type => Deal, deal => deal.user_id)
+  deals: Deal[];
 }
 
 export default User;

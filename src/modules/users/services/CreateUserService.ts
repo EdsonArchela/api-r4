@@ -5,7 +5,18 @@ import IUsersRepository from '../repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import User from '../infra/typeorm/entities/User';
 import IRolesRepository from '../repositories/IRolesRepository';
+import agendor_api from '../../../services/agendor_api';
 
+interface AgUser {
+  id: string;
+  contact: { email: string };
+}
+
+interface UsersList {
+  data: {
+    data: AgUser[];
+  };
+}
 interface IRequest {
   name: string;
   email: string;
@@ -35,14 +46,19 @@ class CreateUserService {
     roles,
   }: IRequest): Promise<User> {
     const checkUserExists = await this.usersRepository.findByEmail(email);
-
     if (checkUserExists) {
       throw new AppError('E-mail já foi cadastrado');
     }
 
     const existsRoles = await this.RolesRepository.findThose(roles);
-
     if (!existsRoles) throw new AppError('Não pude encontrar seu Role');
+
+    const users: UsersList = await agendor_api.get('users');
+    const agendorId = users.data.data.find(
+      a_user => a_user.contact.email === email,
+    );
+
+    if (!agendorId) throw new AppError('Usuário não encontrado no Agendor');
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
@@ -52,6 +68,7 @@ class CreateUserService {
       password: hashedPassword,
       comission,
       roles: existsRoles,
+      agendor_id: agendorId.id,
     });
 
     return user;
