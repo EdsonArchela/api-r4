@@ -26,6 +26,7 @@ usersRouter.post(
 
 usersRouter.patch(
   '/update',
+  is(['ROLE_ADMIN']),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string(),
