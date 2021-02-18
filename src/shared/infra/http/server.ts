@@ -32,6 +32,6 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   });
 });
 
-app.listen(3333, () => {
-  console.log('🛰️  R4 server is running on port 3333!');
+app.listen(3335, () => {
+  console.log('🛰️  R4 server is running on port 3335!');
 });
