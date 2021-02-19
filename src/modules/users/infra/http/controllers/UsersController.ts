@@ -5,6 +5,7 @@ import { classToClass } from 'class-transformer';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import GetUsersOrganizationService from '../../../services/GetUsersOrganizationService';
 import UpdateUserService from '../../../services/UpdateUserService';
+import ResetPasswordService from '../../../services/ResetPasswordService';
 
 export default class UsersController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -37,6 +38,23 @@ export default class UsersController {
     });
 
     return response.json(classToClass(user));
+  }
+
+  public async changePassword(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { password, email } = request.body;
+
+    const updatePassword = container.resolve(ResetPasswordService);
+
+    await updatePassword.execute({
+      email,
+      password,
+      user_id: request.user.id,
+    });
+
+    return response.status(200).json();
   }
 
   public async getOrganization(

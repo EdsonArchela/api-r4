@@ -39,6 +39,17 @@ usersRouter.patch(
   usersController.update,
 );
 
+usersRouter.patch(
+  '/password',
+  celebrate({
+    [Segments.BODY]: {
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+  }),
+  usersController.changePassword,
+);
+
 usersRouter.get(
   '/organization',
   celebrate({
