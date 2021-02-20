@@ -1,7 +1,10 @@
 import 'reflect-metadata';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import fetch from 'node-fetch';
 import moment from 'moment';
+import { username } from '../../../../ormconfig';
+import IUsersRepository from '../../users/repositories/IUsersRepository';
+import AppError from '../../../shared/errors/AppError';
 
 interface IRequest {
   bank: string;
@@ -13,6 +16,7 @@ interface IRequest {
   iof?: number;
   ptax2?: number;
   ir?: number;
+  user_id: string;
 }
 
 interface IResponse {
@@ -36,6 +40,11 @@ function getPreviousWorkday(): moment.Moment {
 
 @injectable()
 export default class SimulateDealService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
   public async execute({
     bank,
     currency,
@@ -46,7 +55,13 @@ export default class SimulateDealService {
     iof,
     ptax2,
     ir,
+    user_id,
   }: IRequest): Promise<IResponse> {
+    const user = await this.usersRepository.findById(user_id);
+    if (!user) {
+      throw new AppError('Usuário não encontrado');
+    }
+
     const client = direction ? otc - spread : otc + spread;
 
     const clientContract = () => {
@@ -95,7 +110,7 @@ export default class SimulateDealService {
     if (direction) cet += -m_ir - m_iof - contract;
     else cet += m_ir + m_iof + contract;
 
-    const assFee = value * spread * 0.4;
+    const assFee = value * spread * user.comission;
 
     return {
       clientQuote: client,

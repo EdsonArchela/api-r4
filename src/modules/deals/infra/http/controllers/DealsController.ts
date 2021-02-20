@@ -25,7 +25,10 @@ export default class DealsController {
 
     const simulateDealService = container.resolve(SimulateDealService);
 
-    const result = await simulateDealService.execute(data);
+    const result = await simulateDealService.execute({
+      ...data,
+      user_id: request.user.id,
+    });
 
     return response.json(result);
   }
