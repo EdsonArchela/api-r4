@@ -44,4 +44,37 @@ dealsRouter.post(
   }),
   dealsController.create,
 );
+
+dealsRouter.post(
+  '/simulate',
+  celebrate({
+    [Segments.BODY]: {
+      bank: Joi.string().valid('Travelex', 'OuroInvest', 'Frente').required(),
+      currency: Joi.string()
+        .valid('USD', 'EUR', 'GBP', 'JPY', 'CHF')
+        .required(),
+      direction: Joi.boolean().required(),
+      value: Joi.number().required(),
+      otc: Joi.number().required(),
+      spread: Joi.number().required(),
+      iof: Joi.number(),
+      ptax2: Joi.number(),
+      ir: Joi.number(),
+      flow: Joi.string()
+        .valid(
+          'D0/D0',
+          'D0/D1',
+          'D0/D2',
+          'D1/D1',
+          'D1/D2',
+          'D2/D2',
+          'D0',
+          'D1',
+          'D2',
+        )
+        .required(),
+    },
+  }),
+  dealsController.simulate,
+);
 export default dealsRouter;

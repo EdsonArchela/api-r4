@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateDealService from '../../../services/CreateDealService';
+import SimulateDealService from '../../../services/SimulateDealService';
 
 export default class DealsController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -14,5 +15,18 @@ export default class DealsController {
     });
 
     return response.json(deal);
+  }
+
+  public async simulate(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const data = request.body;
+
+    const simulateDealService = container.resolve(SimulateDealService);
+
+    const result = await simulateDealService.execute(data);
+
+    return response.json(result);
   }
 }
