@@ -9,47 +9,30 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
+import { AbstractUser } from './AbstractUser';
 import Roles from './Roles';
-import Deal from '../../../../deals/infra/typeorm/entities/Deal';
 
 @Entity('users')
-class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+class User extends AbstractUser {
+  @Column('float8', { nullable: true })
+  comission?: number;
 
-  @Column()
-  name: string;
+  @OneToMany(
+    () => Organization,
+    (organizations: Organization) => organizations.ownerUser,
+    { onDelete: 'CASCADE', onUpdate: 'SET NULL' },
+  )
+  public organizations: Organization[];
 
-  @Column()
-  email: string;
-
-  @Column()
-  @Exclude()
-  password: string;
-
-  @Column()
-  agendor_id: string;
-
-  @Column({ nullable: true })
-  comission: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @ManyToMany(() => Roles, { eager: true, cascade: true })
-  @JoinTable({
-    name: 'users_roles',
-    joinColumns: [{ name: 'user_id' }],
-    inverseJoinColumns: [{ name: 'role_id' }],
+  @ManyToMany(() => Roles, {
+    eager: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'SET NULL',
   })
-  roles: Roles[] | undefined;
-
-  @OneToMany(type => Deal, deal => deal.user_id)
-  deals: Deal[] | undefined;
+  @JoinTable()
+  roles?: Roles[];
 }
 
 export default User;

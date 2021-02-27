@@ -1,6 +1,6 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
-import ensureAuthenticated from '../../../../users/infra/http/middlewares/ensureAuthenticated';
+import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import DealsController from '../controllers/DealsController';
 
 const dealsRouter = Router();
@@ -13,9 +13,7 @@ dealsRouter.post(
   celebrate({
     [Segments.BODY]: {
       organization_id: Joi.string().required(),
-      description: Joi.string().required(),
       value: Joi.number().required(),
-      assFee: Joi.number().required(),
       bank: Joi.string().valid('Travelex', 'OuroInvest', 'Frente').required(),
       cet: Joi.number().required(),
       contract: Joi.number().required(),
@@ -39,7 +37,14 @@ dealsRouter.post(
       operationType: Joi.string()
         .valid('Importação', 'Exportação', 'Disponibilidade', 'Financeiro')
         .required(),
-      r4Fee: Joi.number().required(),
+      partnerId: Joi.string(),
+      advisorId: Joi.string(),
+      spread: Joi.number().required(),
+      iof: Joi.number(),
+      ir: Joi.number(),
+      ptax2: Joi.number(),
+      darf: Joi.boolean(),
+      otc: Joi.number().required(),
     },
   }),
   dealsController.create,

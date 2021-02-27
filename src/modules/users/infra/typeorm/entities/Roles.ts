@@ -26,12 +26,12 @@ class Roles {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToMany(() => Permission, { eager: true })
-  @JoinTable({
-    name: 'permissions_roles',
-    joinColumns: [{ name: 'role_id' }],
-    inverseJoinColumns: [{ name: 'permission_id' }],
+  @ManyToMany(() => Permission, {
+    eager: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'SET NULL',
   })
+  @JoinTable()
   permissions: Permission[];
 }
 export default Roles;

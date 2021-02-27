@@ -1,17 +1,27 @@
+import Partner from '../../users/infra/typeorm/entities/Partners';
+import User from '../../users/infra/typeorm/entities/User';
+
 export default interface ICreateUserDTO {
-  deal_id: string;
-  user_id: string;
-  ownnerId: string;
+  user?: User | Partner;
+  advisorId: string;
   agendorOrganizationId: string;
-  a_email: string;
+  partnerId?: string;
   operationType: string;
   bank: string;
   currency: string;
-  direction: string;
+  direction: boolean;
   flow: string;
   value: number;
   assFee: number;
   r4Fee: number;
   contract: number;
   cet: number;
+  iof: number;
+  ptax1: number;
+  ptax2: number;
+  ir: number;
+  contractDiscount: number;
+  darf?: number;
+  partnerFee: number;
+  counterFee: number;
 }

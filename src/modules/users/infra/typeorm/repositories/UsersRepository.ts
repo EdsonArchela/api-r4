@@ -48,6 +48,13 @@ class UsersRepository implements IUsersRepository {
     const user = await this.ormRepository.findOne(id);
     return user;
   }
+
+  public async findByAgendorId(id: string): Promise<User | undefined> {
+    const user = await this.ormRepository.findOne({
+      where: { agendor_id: id },
+    });
+    return user;
+  }
 }
 
 export default UsersRepository;

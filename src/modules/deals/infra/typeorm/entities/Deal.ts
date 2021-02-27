@@ -2,32 +2,32 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import Partner from '../../../../users/infra/typeorm/entities/Partners';
+import User from '../../../../users/infra/typeorm/entities/User';
 
 @Entity('deals')
 class Deal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  user_id: string;
-
-  @Column()
-  deal_id: string;
-
-  @Column()
-  ownnerId: string;
+  @ManyToMany(() => User || Partner)
+  @JoinTable()
+  user: User | Partner;
 
   @Column()
   agendorOrganizationId: string;
 
   @Column()
-  a_email: string;
+  advisorId: string;
 
-  @Column()
-  operationType: string;
+  @Column({ nullable: true })
+  partnerId?: string;
 
   @Column()
   bank: string;
@@ -39,22 +39,43 @@ class Deal {
   direction: string;
 
   @Column()
+  operationType: string;
+
+  @Column()
   flow: string;
 
-  @Column()
+  @Column('float8')
   value: number;
 
-  @Column()
-  assFee: number;
-
-  @Column()
-  r4Fee: number;
-
-  @Column()
+  @Column('float8')
   contract: number;
 
-  @Column()
+  @Column('float8')
+  iof: number;
+
+  @Column('float8')
+  ptax2: number;
+
+  @Column('float8')
+  ptax1: number;
+
+  @Column('float8')
+  ir: number;
+
+  @Column('float8')
+  contractDiscount: number;
+
+  @Column('float8')
+  assFee: number;
+
+  @Column('float8')
+  r4Fee: number;
+
+  @Column('float8')
   cet: number;
+
+  @Column('float8', { nullable: true })
+  darf?: number;
 
   @CreateDateColumn()
   created_at: Date;

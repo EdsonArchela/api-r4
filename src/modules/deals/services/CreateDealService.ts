@@ -1,33 +1,33 @@
-import { inject, injectable } from 'tsyringe';
-import agendor_api from '../../../services/agendor_api';
+import { container, inject, injectable } from 'tsyringe';
 import AppError from '../../../shared/errors/AppError';
+import IOrganizationsRepository from '../../organizations/repositories/IOrganizationsRepository';
+import CreateOrganizationService from '../../organizations/serivces/CreateOrganizationService';
+import Roles from '../../users/infra/typeorm/entities/Roles';
+import IPartnersRepository from '../../users/repositories/IPartnersRepository';
 import IUsersRepository from '../../users/repositories/IUsersRepository';
 import Deal from '../infra/typeorm/entities/Deal';
 import IDealsRepository from '../repositories/IDealsRepository';
+import SimulateDealService from './SimulateDealService';
 
 interface IRequest {
   organization_id: string;
-  description: string;
   value: number;
   user_id: string;
-  assFee: number;
   bank: string;
   cet: number;
   contract: number;
   currency: string;
-  direction: string;
+  direction: boolean;
   flow: string;
   operationType: string;
-  r4Fee: number;
-}
-
-interface IResponse {
-  data: {
-    data: {
-      id: number;
-      _email: string;
-    };
-  };
+  partnerId?: string;
+  advisorId?: string;
+  otc: number;
+  spread: number;
+  iof: number;
+  ir: number;
+  ptax2: number;
+  darf: boolean;
 }
 
 @injectable()
@@ -37,70 +37,125 @@ export default class CreateDealService {
     private usersRepository: IUsersRepository,
     @inject('DealsRepository')
     private dealsRepository: IDealsRepository,
+    @inject('OrganizationsRepository')
+    private organizationsRepository: IOrganizationsRepository,
+    @inject('PartnersRepository')
+    private partnerRepository: IPartnersRepository,
   ) {}
-
-  private getProduct(prod: string) {
-    switch (prod) {
-      case 'Exportação':
-        return 93972;
-      case 'Financeiro':
-        return 93981;
-      case 'Importação':
-        return 93970;
-      default:
-        return 93982;
-    }
-  }
 
   public async execute({
     organization_id,
-    description,
     value,
     user_id,
-    assFee,
     bank,
-    cet,
     contract,
     currency,
     direction,
     flow,
     operationType,
-    r4Fee,
+    partnerId,
+    advisorId,
+    otc,
+    spread,
+    iof,
+    ir,
+    ptax2,
+    darf,
   }: IRequest): Promise<Deal> {
     const user = await this.usersRepository.findById(user_id);
-    if (!user) throw new AppError('Usuário não encontrado');
+    let partner;
+    if (!user) {
+      partner = await this.partnerRepository.findById(user_id);
+      if (!partner) throw new AppError('Usuário não encontrado');
+    }
+    if (!user && !partner) throw new AppError('Usuário não encontrado');
 
-    const response: IResponse = await agendor_api.post(
-      `organizations/${organization_id}/deals`,
-      {
-        title: 'Fechamento de Câmbio -',
-        description: description,
-        value: value,
-        ownerUser: user.agendor_id,
-        products: [this.getProduct(operationType)],
-      },
-    );
-    if (!response)
-      throw new AppError(
-        'Não foi possível adicionar um novo negócio no agendor',
-      );
+    const isBroker = user?.roles?.filter(
+      (role: Roles) => role.name === 'ROLE_MESA',
+    ).length;
+
+    if (!advisorId) advisorId = user_id;
+
+    // criar nova organização caso não exista
+    let organization = undefined;
+    organization = await this.organizationsRepository.findById(organization_id);
+    if (!organization) {
+      if (!organization) {
+        const createOrganizationService = container.resolve(
+          CreateOrganizationService,
+        );
+        organization = createOrganizationService.execute({
+          agendorId: organization_id,
+          partner: partnerId,
+          userId: advisorId,
+        });
+      }
+    }
+
+    let counterFee = 0;
+    let partnerOpFee = 0;
+    let partnerIndFee = 0;
+
+    if (isBroker) counterFee = 0.5;
+
+    if (partnerId) {
+      if (partner?.roles?.filter(role => role.name === 'ROLE_PARTNER'))
+        partnerOpFee = value * spread * 0.95 * 0.86 * partner.operationFee;
+      else
+        partnerIndFee =
+          value * spread * 0.95 * 0.86 * (partner?.indicationFee || 0);
+    }
+
+    //recalculate sensible data
+    const simulateDealService = container.resolve(SimulateDealService);
+
+    const simulatedData = await simulateDealService.execute({
+      bank,
+      currency,
+      direction,
+      otc,
+      spread,
+      user_id,
+      value,
+      iof,
+      ir,
+      ptax2,
+      darf,
+    });
+    const discount = contract - simulatedData.contract;
 
     const deal = await this.dealsRepository.create({
-      deal_id: response.data.data.id.toString(),
-      user_id: user.id,
-      a_email: response.data.data._email,
-      agendorOrganizationId: organization_id,
-      assFee,
+      advisorId,
       bank,
-      cet,
+      agendorOrganizationId: organization_id,
+      assFee:
+        simulatedData.assFee -
+        discount -
+        counterFee -
+        partnerOpFee -
+        partnerIndFee,
+      partnerFee: partnerId
+        ? partnerOpFee > 0
+          ? partnerOpFee
+          : partnerIndFee
+        : 0,
+      counterFee,
+      cet: simulatedData.cet,
       contract,
+      contractDiscount: discount,
       currency,
       direction,
       flow,
+      iof,
+      ir,
       operationType,
-      ownnerId: user.agendor_id,
-      r4Fee,
+      ptax1: simulatedData.ptaxD1 || 0,
+      ptax2,
+      r4Fee: value * spread * 0.5 - simulatedData.assFee,
+      user: user || partner,
       value,
+      darf: simulatedData.darf,
+      partnerId,
     });
 
     return deal;

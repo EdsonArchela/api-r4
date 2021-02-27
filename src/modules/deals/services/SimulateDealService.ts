@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 import fetch from 'node-fetch';
 import moment from 'moment';
-import { username } from '../../../../ormconfig';
 import IUsersRepository from '../../users/repositories/IUsersRepository';
 import AppError from '../../../shared/errors/AppError';
 
@@ -17,6 +16,7 @@ interface IRequest {
   ptax2?: number;
   ir?: number;
   user_id: string;
+  darf: boolean;
 }
 
 interface IResponse {
@@ -25,6 +25,7 @@ interface IResponse {
   ptaxD1?: number;
   cet: number;
   assFee: number;
+  darf?: number;
 }
 
 function getPreviousWorkday(): moment.Moment {
@@ -56,6 +57,7 @@ export default class SimulateDealService {
     ptax2,
     ir,
     user_id,
+    darf,
   }: IRequest): Promise<IResponse> {
     const user = await this.usersRepository.findById(user_id);
     if (!user) {
@@ -110,14 +112,15 @@ export default class SimulateDealService {
     if (direction) cet += -m_ir - m_iof - contract;
     else cet += m_ir + m_iof + contract;
 
-    const assFee = value * spread * user.comission;
+    const assFee = value * spread * (user.comission || 0);
 
     return {
       clientQuote: client,
       contract,
       ptaxD1: ptax?.cotacaoVenda || undefined,
-      cet,
+      cet: darf ? (direction ? cet + m_ir : cet - m_ir) : cet,
       assFee,
+      darf: darf ? m_ir : 0,
     };
   }
 }
