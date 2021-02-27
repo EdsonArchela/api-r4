@@ -96,7 +96,7 @@ export default class CreateDealService {
     let partnerOpFee = 0;
     let partnerIndFee = 0;
 
-    if (isBroker) counterFee = 0.5;
+    if (isBroker) counterFee = user?.comission || 0;
 
     if (partnerId) {
       if (partner?.roles?.filter(role => role.name === 'ROLE_PARTNER'))
@@ -115,7 +115,7 @@ export default class CreateDealService {
       direction,
       otc,
       spread,
-      user_id,
+      user_id: advisorId,
       value,
       iof,
       ir,
@@ -124,16 +124,15 @@ export default class CreateDealService {
     });
     const discount = contract - simulatedData.contract;
 
+    const finalAssFee =
+      (simulatedData.assFee - discount) /
+      ((1 + partnerOpFee) * (1 + partnerIndFee));
+
     const deal = await this.dealsRepository.create({
       advisorId,
       bank,
       agendorOrganizationId: organization_id,
-      assFee:
-        simulatedData.assFee -
-        discount -
-        counterFee -
-        partnerOpFee -
-        partnerIndFee,
+      assFee: finalAssFee * (1 - counterFee),
       partnerFee: partnerId
         ? partnerOpFee > 0
           ? partnerOpFee
