@@ -7,11 +7,11 @@ import is from '../middlewares/permissions';
 const usersRouter = Router();
 const usersController = new UsersController();
 
-// usersRouter.use(ensureAuthenticated);
+usersRouter.use(ensureAuthenticated);
 
 usersRouter.post(
   '/',
-  // is(['ROLE_ADMIN']),
+  is(['ROLE_ADMIN']),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
@@ -26,7 +26,7 @@ usersRouter.post(
 
 usersRouter.patch(
   '/update',
-  // is(['ROLE_ADMIN']),
+  is(['ROLE_ADMIN']),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string(),

@@ -7,11 +7,11 @@ import is from '../middlewares/permissions';
 const rolesRouter = Router();
 const rolesController = new RolesController();
 
-// rolesRouter.use(ensureAuthenticated);
+rolesRouter.use(ensureAuthenticated);
 
 rolesRouter.post(
   '/',
-  // is(['ROLE_ADMIN']),
+  is(['ROLE_ADMIN']),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
