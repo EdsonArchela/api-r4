@@ -6,5 +6,6 @@ export default interface IOrganizationsRepository {
   save(data: Organization): Promise<Organization>;
   findById(id: string): Promise<Organization | undefined>;
   findByAgendorId(id: string): Promise<Organization | undefined>;
+  findByListOfAgendorIds(ids: string[]): Promise<Organization[]>;
   findByUserId(id: string): Promise<Organization | undefined>;
 }

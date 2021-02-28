@@ -22,4 +22,11 @@ export default class DealsRepository implements IDealsRepository {
     const deals = await this.ormRepository.find();
     return deals;
   }
+
+  public async findByUserId(userId: string): Promise<Deal[]> {
+    const deals = await this.ormRepository.find({
+      where: { advisorId: userId },
+    });
+    return deals;
+  }
 }

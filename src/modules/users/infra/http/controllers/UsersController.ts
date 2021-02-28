@@ -5,6 +5,7 @@ import { classToClass } from 'class-transformer';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '../../../services/UpdateUserService';
 import ResetPasswordService from '../../../services/ResetPasswordService';
+import ListUsersService from '../../../services/ListUsersService';
 
 export default class UsersController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -54,5 +55,13 @@ export default class UsersController {
     });
 
     return response.status(200).json();
+  }
+
+  public async index(request: Request, response: Response): Promise<Response> {
+    const indexUsersService = container.resolve(ListUsersService);
+
+    const users = await indexUsersService.execute();
+
+    return response.json(classToClass(users));
   }
 }

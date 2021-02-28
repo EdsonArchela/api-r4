@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateDealService from '../../../services/CreateDealService';
 import ListAllDealsService from '../../../services/ListDeasService';
+import ListUserDealsService from '../../../services/ListUserDealsService';
 import SimulateDealService from '../../../services/SimulateDealService';
 
 export default class DealsController {
@@ -21,6 +22,17 @@ export default class DealsController {
   public async index(request: Request, response: Response): Promise<Response> {
     const listAllDealsService = container.resolve(ListAllDealsService);
     const deals = await listAllDealsService.execute();
+    return response.json(deals);
+  }
+
+  public async getUserDeals(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const userId = request.user.id;
+    const listUserDealsService = container.resolve(ListUserDealsService);
+    const deals = await listUserDealsService.execute(userId);
+
     return response.json(deals);
   }
 

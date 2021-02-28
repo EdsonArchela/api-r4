@@ -50,4 +50,6 @@ usersRouter.patch(
   usersController.changePassword,
 );
 
+usersRouter.get('/all', is(['ROLE_ADMIN', 'ROLE_MESA']), usersController.index);
+
 export default usersRouter;

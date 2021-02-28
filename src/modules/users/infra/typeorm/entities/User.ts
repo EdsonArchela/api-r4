@@ -1,16 +1,6 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, Column, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
-import partnersRouter from '../../http/routes/partners.routes';
 import { AbstractUser } from './AbstractUser';
 import Partner from './Partners';
 import Roles from './Roles';
@@ -18,6 +8,7 @@ import Roles from './Roles';
 @Entity('users')
 class User extends AbstractUser {
   @Column('float8', { nullable: true })
+  @Exclude()
   comission?: number;
 
   @OneToMany(

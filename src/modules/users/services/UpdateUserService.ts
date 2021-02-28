@@ -60,7 +60,8 @@ class UpdateUserService {
       a_user => a_user.contact.email === email,
     );
 
-    if (!agendorId) throw new AppError('Usuário não encontrado no Agendor');
+    if (!agendorId && email !== 'mesa@r4cambio.com.br')
+      throw new AppError('Usuário não encontrado no Agendor');
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
@@ -71,7 +72,7 @@ class UpdateUserService {
       password: hashedPassword,
       comission: comission || 0,
       roles: existsRoles,
-      agendor_id: agendorId.id,
+      agendor_id: agendorId?.id,
     });
 
     return updatedUser;

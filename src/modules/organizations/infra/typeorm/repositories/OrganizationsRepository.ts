@@ -1,4 +1,4 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, In } from 'typeorm';
 import IOrganizationDTO from '../../../dtos/IOrganizationDTO';
 import IOrganizationsRepository from '../../../repositories/IOrganizationsRepository';
 import Organization from '../entities/Organization';
@@ -40,6 +40,13 @@ export default class OrganizationsRepository
       where: { agendor_id: id },
     });
     return organization;
+  }
+
+  public async findByListOfAgendorIds(ids: string[]): Promise<Organization[]> {
+    const organizations = await this.ormRepository.find({
+      where: { agendor_id: In(ids) },
+    });
+    return organizations;
   }
 
   public async findById(id: string): Promise<Organization | undefined> {

@@ -4,11 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
-  OneToMany,
 } from 'typeorm';
-import Roles from './Roles';
 
 export abstract class AbstractUser {
   @PrimaryGeneratedColumn('uuid')
