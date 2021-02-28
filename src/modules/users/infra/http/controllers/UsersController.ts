@@ -3,7 +3,6 @@ import { container } from 'tsyringe';
 import { classToClass } from 'class-transformer';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
-import GetUsersOrganizationService from '../../../services/GetUsersOrganizationService';
 import UpdateUserService from '../../../services/UpdateUserService';
 import ResetPasswordService from '../../../services/ResetPasswordService';
 
@@ -55,24 +54,5 @@ export default class UsersController {
     });
 
     return response.status(200).json();
-  }
-
-  public async getOrganization(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
-    const { name, cnpj } = request.query;
-
-    const getUsersOrganizationService = container.resolve(
-      GetUsersOrganizationService,
-    );
-
-    const organizations = await getUsersOrganizationService.execute(
-      request.user.id,
-      name as string,
-      cnpj as string,
-    );
-
-    return response.json(organizations);
   }
 }

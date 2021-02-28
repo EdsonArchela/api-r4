@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateDealService from '../../../services/CreateDealService';
+import ListAllDealsService from '../../../services/ListDeasService';
 import SimulateDealService from '../../../services/SimulateDealService';
 
 export default class DealsController {
@@ -15,6 +16,12 @@ export default class DealsController {
     });
 
     return response.json(deal);
+  }
+
+  public async index(request: Request, response: Response): Promise<Response> {
+    const listAllDealsService = container.resolve(ListAllDealsService);
+    const deals = await listAllDealsService.execute();
+    return response.json(deals);
   }
 
   public async simulate(

@@ -25,6 +25,23 @@ export default class OrganizationsRepository
     return this.ormRepository.save(organization);
   }
 
+  public async findByUserId(id: string): Promise<Organization | undefined> {
+    const organization = await this.ormRepository
+      .createQueryBuilder('org')
+      .leftJoinAndSelect('org.ownerUser', 'ownerUser')
+      .where('ownerUser.id = :userId', { userId: id })
+      .execute();
+    console.log(organization);
+    return organization;
+  }
+
+  public async findByAgendorId(id: string): Promise<Organization | undefined> {
+    const organization = await this.ormRepository.findOne({
+      where: { agendor_id: id },
+    });
+    return organization;
+  }
+
   public async findById(id: string): Promise<Organization | undefined> {
     const organization = await this.ormRepository.findOne(id);
     return organization;

@@ -50,25 +50,4 @@ usersRouter.patch(
   usersController.changePassword,
 );
 
-usersRouter.get(
-  '/organization',
-  celebrate({
-    [Segments.PARAMS]: {
-      name: Joi.string(),
-      cnpj: Joi.string(),
-    },
-  }),
-  usersController.getOrganization,
-);
-
-// usersRouter.patch(
-//   '/cpf',
-//   celebrate({
-//     [Segments.BODY]: {
-//       cpf: Joi.string().required(),
-//     },
-//   }),
-//   usersController.update,
-// );
-
 export default usersRouter;

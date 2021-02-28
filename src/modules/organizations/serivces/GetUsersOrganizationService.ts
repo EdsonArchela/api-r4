@@ -1,20 +1,21 @@
 import { inject, injectable } from 'tsyringe';
 import agendor_api from '../../../services/agendor_api';
 import AppError from '../../../shared/errors/AppError';
-import IUsersRepository from '../repositories/IUsersRepository';
+import IUsersRepository from '../../users/repositories/IUsersRepository';
+import IOrganizationsRepository from '../repositories/IOrganizationsRepository';
 
 @injectable()
 class GetUsersOrganizationService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('OrganizationsRepository')
+    private organizationsRepository: IOrganizationsRepository,
   ) {}
 
-  public async execute(
-    id: string,
-    name: string,
-    cnpj: string,
-  ): Promise<object> {
+  public async execute(id: string, name: string, cnpj: string): Promise<void> {
+    const organizations = await this.organizationsRepository.findByUserId(id);
+
     const user = await this.usersRepository.findById(id);
 
     if (!user) throw new AppError('Usuário não encontrado');
@@ -28,7 +29,7 @@ class GetUsersOrganizationService {
       }`,
     );
 
-    return data;
+    return { ...data, partner: organizations?.partner };
   }
 }
 export default GetUsersOrganizationService;

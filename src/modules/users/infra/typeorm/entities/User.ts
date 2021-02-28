@@ -10,7 +10,9 @@ import {
   OneToMany,
 } from 'typeorm';
 import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
+import partnersRouter from '../../http/routes/partners.routes';
 import { AbstractUser } from './AbstractUser';
+import Partner from './Partners';
 import Roles from './Roles';
 
 @Entity('users')
@@ -33,6 +35,9 @@ class User extends AbstractUser {
   })
   @JoinTable()
   roles?: Roles[];
+
+  @OneToMany(() => Partner, (partner: Partner) => partner.user, { eager: true })
+  partners: Partner[];
 }
 
 export default User;

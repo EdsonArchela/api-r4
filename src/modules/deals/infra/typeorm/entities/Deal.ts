@@ -36,7 +36,7 @@ class Deal {
   currency: string;
 
   @Column()
-  direction: string;
+  direction: boolean;
 
   @Column()
   operationType: string;

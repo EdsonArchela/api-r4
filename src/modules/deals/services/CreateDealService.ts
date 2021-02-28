@@ -78,18 +78,18 @@ export default class CreateDealService {
 
     // criar nova organização caso não exista
     let organization = undefined;
-    organization = await this.organizationsRepository.findById(organization_id);
+    organization = await this.organizationsRepository.findByAgendorId(
+      organization_id,
+    );
     if (!organization) {
-      if (!organization) {
-        const createOrganizationService = container.resolve(
-          CreateOrganizationService,
-        );
-        organization = createOrganizationService.execute({
-          agendorId: organization_id,
-          partner: partnerId,
-          userId: advisorId,
-        });
-      }
+      const createOrganizationService = container.resolve(
+        CreateOrganizationService,
+      );
+      organization = createOrganizationService.execute({
+        agendorId: organization_id,
+        partner: partnerId,
+        userId: advisorId,
+      });
     }
 
     let counterFee = 0;

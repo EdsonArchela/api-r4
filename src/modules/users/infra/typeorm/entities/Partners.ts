@@ -4,6 +4,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToOne,
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
@@ -12,14 +13,6 @@ import Roles from './Roles';
 
 @Entity('partners')
 export default class Partner extends AbstractUser {
-  @OneToOne(() => User, {
-    eager: true,
-    onDelete: 'CASCADE',
-    onUpdate: 'SET NULL',
-  })
-  @JoinColumn()
-  public user: User;
-
   @Column('float8')
   operationFee: number;
 
@@ -40,4 +33,7 @@ export default class Partner extends AbstractUser {
   })
   @JoinTable()
   roles: Roles[] | undefined;
+
+  @ManyToOne(() => User, (user: User) => user.partners)
+  user: User;
 }

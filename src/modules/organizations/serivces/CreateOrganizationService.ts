@@ -35,12 +35,16 @@ export default class CreateOrganizationService {
       if (!partner) throw new AppError('Parceiro não encontrado');
     }
 
-    const { data: agendor }: { data: IAgendorResponse } = await agendor_api.get(
+    console.log(data);
+
+    const { data: a_data } = await agendor_api.get(
       `organizations/${data.agendorId}`,
     );
+
+    const agendor: IAgendorResponse = a_data.data;
     if (!agendor) throw new AppError('Empresa não encontrada no Agendor');
 
-    console.log(agendor);
+    console.log('agendor ->', agendor);
 
     const ownerUser = await this.usersRepository.findByAgendorId(
       agendor.ownerUser.id.toString(),
