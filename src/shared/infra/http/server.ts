@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { errors } from 'celebrate';
+import { errors, isCelebrateError } from 'celebrate';
 
 import 'express-async-errors';
 
@@ -20,6 +20,12 @@ app.use(routes);
 app.use(errors());
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
+  console.log('joi', err);
+  if (isCelebrateError(err)) {
+    return response.status(400).json({
+      err: err.message,
+    });
+  }
   if (err instanceof AppError) {
     return response
       .status(err.statusCode)

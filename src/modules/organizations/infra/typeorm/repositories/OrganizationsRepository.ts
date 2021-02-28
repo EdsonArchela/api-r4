@@ -31,7 +31,6 @@ export default class OrganizationsRepository
       .leftJoinAndSelect('org.ownerUser', 'ownerUser')
       .where('ownerUser.id = :userId', { userId: id })
       .execute();
-    console.log(organization);
     return organization;
   }
 
