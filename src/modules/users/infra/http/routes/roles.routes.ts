@@ -22,6 +22,10 @@ rolesRouter.post(
   rolesController.create,
 );
 
-rolesRouter.get('/', rolesController.index);
+rolesRouter.get(
+  '/',
+  is(['ROLE_ADMIN', 'ROLE_CONSELHO']),
+  rolesController.index,
+);
 
 export default rolesRouter;

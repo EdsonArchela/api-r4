@@ -62,7 +62,11 @@ dealsRouter.post(
   dealsController.create,
 );
 
-dealsRouter.get('/all', is(['ROLE_ADMIN']), dealsController.index);
+dealsRouter.get(
+  '/all',
+  is(['ROLE_CONSELHO', 'ROLE_ADMIN']),
+  dealsController.index,
+);
 
 dealsRouter.get('/user', dealsController.getUserDeals);
 

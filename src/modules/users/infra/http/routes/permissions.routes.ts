@@ -21,6 +21,10 @@ permissionRouter.post(
   permissionController.create,
 );
 
-permissionRouter.get('/', permissionController.index);
+permissionRouter.get(
+  '/',
+  is(['ROLE_ADMIN', 'ROLE_CONSELHO']),
+  permissionController.index,
+);
 
 export default permissionRouter;
