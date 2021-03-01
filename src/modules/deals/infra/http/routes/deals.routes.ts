@@ -98,6 +98,7 @@ dealsRouter.post(
           'D2',
         )
         .required(),
+      darf: Joi.boolean(),
     },
   }),
   dealsController.simulate,

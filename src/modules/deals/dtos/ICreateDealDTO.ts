@@ -15,6 +15,7 @@ export default interface ICreateUserDTO {
   assFee: number;
   r4Fee: number;
   contract: number;
+  spread: number;
   cet: number;
   iof: number;
   ptax1: number;
@@ -22,6 +23,6 @@ export default interface ICreateUserDTO {
   ir: number;
   contractDiscount: number;
   darf?: number;
-  partnerFee: number;
-  counterFee: number;
+  partner: number;
+  broker: number;
 }

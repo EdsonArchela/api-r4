@@ -50,6 +50,9 @@ class Deal {
   @Column('float8')
   contract: number;
 
+  @Column('float8', { default: 0 })
+  spread: number;
+
   @Column('float8')
   iof: number;
 
@@ -76,6 +79,12 @@ class Deal {
 
   @Column('float8', { nullable: true })
   darf?: number;
+
+  @Column('float8', { nullable: true })
+  broker?: number;
+
+  @Column('float8', { nullable: true })
+  partner?: number;
 
   @CreateDateColumn()
   created_at: Date;

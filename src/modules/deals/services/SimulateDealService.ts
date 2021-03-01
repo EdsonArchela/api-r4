@@ -114,6 +114,7 @@ export default class SimulateDealService {
 
     const assFee = value * spread * (user.comission || 0);
 
+    console.log(darf, m_ir);
     return {
       clientQuote: client,
       contract,

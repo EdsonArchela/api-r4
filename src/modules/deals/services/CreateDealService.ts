@@ -133,16 +133,17 @@ export default class CreateDealService {
       bank,
       agendorOrganizationId: organization_id,
       assFee: finalAssFee * (1 - counterFee),
-      partnerFee: partnerId
+      partner: partnerId
         ? partnerOpFee > 0
           ? partnerOpFee
           : partnerIndFee
         : 0,
-      counterFee,
+      broker: counterFee,
       cet: simulatedData.cet,
       contract,
       contractDiscount: discount,
       currency,
+      spread,
       direction,
       flow,
       iof,

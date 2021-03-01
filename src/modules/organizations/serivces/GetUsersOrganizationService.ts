@@ -24,7 +24,7 @@ class GetUsersOrganizationService {
       throw new AppError('Digite um nome ou cnpj para a procura');
 
     const { data } = await agendor_api.get(
-      `/organizations?userOwener=${user.agendor_id}&per_page=100&${
+      `/organizations?userOwner=${user.agendor_id}&per_page=100&${
         name ? `name=${name}` : `cnpj=${cnpj}`
       }`,
     );
