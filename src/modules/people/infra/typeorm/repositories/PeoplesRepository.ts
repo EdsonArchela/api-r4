@@ -1,5 +1,4 @@
 import { getRepository, In, Repository } from 'typeorm';
-import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
 import IPeopleDTO from '../../../dtos/IPeopleDTO';
 import IPeoplesRepository from '../../../repositories/IPeoplesRepository';
 import People from '../entities/People';
