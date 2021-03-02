@@ -6,6 +6,7 @@ import rolesRouter from '@modules/users/infra/http/routes/roles.routes';
 import dealsRouter from '@modules/deals/infra/http/routes/deals.routes';
 import partnersRouter from '@modules/users/infra/http/routes/partners.routes';
 import organizationRouter from '../../../../modules/organizations/infra/http/routes/organization.routes';
+import peopleRouter from '../../../../modules/people/infra/http/routes/people.routes';
 
 const routes = Router();
 
@@ -14,6 +15,7 @@ routes.use('/partners', partnersRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use('/permissions', permissionRouter);
 routes.use('/organizations', organizationRouter);
+routes.use('/peoples', peopleRouter);
 routes.use('/roles', rolesRouter);
 routes.use('/deals', dealsRouter);
 

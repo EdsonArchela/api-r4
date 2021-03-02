@@ -20,7 +20,6 @@ class EnsureUserRole {
 
     if (!user) throw new AppError('Usuário não encontrado');
 
-    console.log('Users Roles', user.roles, user);
     const userRoles = user.roles?.map(role => role.name);
 
     const existsRoles = userRoles?.some(r => roles.includes(r));

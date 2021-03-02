@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Entity, Column, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
+import Organization from '@modules/organizations/infra/typeorm/entities/Organization';
+import People from '@modules/people/infra/typeorm/entities/People';
 import { AbstractUser } from './AbstractUser';
 import Partner from './Partners';
 import Roles from './Roles';
@@ -17,6 +18,12 @@ class User extends AbstractUser {
     { onDelete: 'CASCADE', onUpdate: 'SET NULL' },
   )
   public organizations: Organization[];
+
+  @OneToMany(() => People, (peoples: People) => peoples.ownerUser, {
+    onDelete: 'CASCADE',
+    onUpdate: 'SET NULL',
+  })
+  public peoples: People[];
 
   @ManyToMany(() => Roles, {
     eager: true,

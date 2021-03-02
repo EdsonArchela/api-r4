@@ -8,7 +8,6 @@ import SimulateDealService from '../../../services/SimulateDealService';
 export default class DealsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const data = request.body;
-    console.log('CREATE DEAL CONTROLLER', data);
 
     const createDealService = container.resolve(CreateDealService);
 

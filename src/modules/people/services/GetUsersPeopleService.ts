@@ -2,33 +2,33 @@ import { inject, injectable } from 'tsyringe';
 import agendor_api from '../../../services/agendor_api';
 import AppError from '../../../shared/errors/AppError';
 import IUsersRepository from '../../users/repositories/IUsersRepository';
-import IOrganizationsRepository from '../repositories/IOrganizationsRepository';
+import IPeoplesRepository from '../repositories/IPeoplesRepository';
 
 @injectable()
-class GetUsersOrganizationService {
+export default class GetUsersPeopleService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
-    @inject('OrganizationsRepository')
-    private organizationsRepository: IOrganizationsRepository,
+    @inject('PeoplesRepository')
+    private peoplesRepository: IPeoplesRepository,
   ) {}
 
-  public async execute(id: string, name: string, cnpj: string): Promise<void> {
-    const organizations = await this.organizationsRepository.findByUserId(id);
+  public async execute(id: string, name: string, cpf: string): Promise<void> {
+    const people = await this.peoplesRepository.findByUserId(id);
 
     const user = await this.usersRepository.findById(id);
 
     if (!user) throw new AppError('Usuário não encontrado');
 
-    if (!name && !cnpj)
+    if (!name && !cpf)
       throw new AppError('Digite um nome ou cnpj para a procura');
 
     const { data } = await agendor_api.get(
-      `/organizations?${
+      `/people?${
         user.agendor_id ? `userOwner=${user.agendor_id}&` : ''
-      }per_page=100&${name ? `name=${name}` : `cnpj=${cnpj}`}`,
+      }per_page=100&${name ? `name=${name}` : `cpf=${cpf}`}`,
     );
-    return { ...data, partner: organizations?.partner };
+
+    return { ...data, partner: people?.partner };
   }
 }
-export default GetUsersOrganizationService;

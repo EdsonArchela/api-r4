@@ -68,6 +68,8 @@ export default class SimulateDealService {
 
     const clientContract = () => {
       switch (bank) {
+        case 'OurInvest':
+          return 100;
         default:
           return 50 * client;
       }
@@ -83,7 +85,7 @@ export default class SimulateDealService {
           cotacaoVenda: number;
         }
       | undefined;
-    if (currency !== 'USD') {
+    if (currency !== 'USD' && bank === 'Travelex') {
       const response = await fetch(
         'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/' +
           "CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='" +
@@ -114,7 +116,6 @@ export default class SimulateDealService {
 
     const assFee = value * spread * (user.comission || 0);
 
-    console.log(darf, m_ir);
     return {
       clientQuote: client,
       contract,

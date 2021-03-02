@@ -4,7 +4,8 @@ import User from '../../users/infra/typeorm/entities/User';
 export default interface ICreateUserDTO {
   user?: User | Partner;
   advisorId: string;
-  agendorOrganizationId: string;
+  agendorOrganizationId?: string;
+  agendorPeopleId?: string;
   partnerId?: string;
   operationType: string;
   bank: string;

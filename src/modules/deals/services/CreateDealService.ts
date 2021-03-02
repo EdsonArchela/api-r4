@@ -2,6 +2,8 @@ import { container, inject, injectable } from 'tsyringe';
 import AppError from '../../../shared/errors/AppError';
 import IOrganizationsRepository from '../../organizations/repositories/IOrganizationsRepository';
 import CreateOrganizationService from '../../organizations/serivces/CreateOrganizationService';
+import CreatePeopleService from '@modules/people/services/CreatePeoplesService';
+import IPeoplesRepository from '../../people/repositories/IPeoplesRepository';
 import Roles from '../../users/infra/typeorm/entities/Roles';
 import IPartnersRepository from '../../users/repositories/IPartnersRepository';
 import IUsersRepository from '../../users/repositories/IUsersRepository';
@@ -10,7 +12,8 @@ import IDealsRepository from '../repositories/IDealsRepository';
 import SimulateDealService from './SimulateDealService';
 
 interface IRequest {
-  organization_id: string;
+  organization_id?: string;
+  people_id?: string;
   value: number;
   user_id: string;
   bank: string;
@@ -41,10 +44,13 @@ export default class CreateDealService {
     private organizationsRepository: IOrganizationsRepository,
     @inject('PartnersRepository')
     private partnerRepository: IPartnersRepository,
+    @inject('PeoplesRepository')
+    private peoplesRepository: IPeoplesRepository,
   ) {}
 
   public async execute({
     organization_id,
+    people_id,
     value,
     user_id,
     bank,
@@ -69,27 +75,42 @@ export default class CreateDealService {
       if (!partner) throw new AppError('Usuário não encontrado');
     }
     if (!user && !partner) throw new AppError('Usuário não encontrado');
-
     const isBroker = user?.roles?.filter(
       (role: Roles) => role.name === 'ROLE_MESA',
     ).length;
 
     if (!advisorId) advisorId = user_id;
-
     // criar nova organização caso não exista
     let organization = undefined;
-    organization = await this.organizationsRepository.findByAgendorId(
-      organization_id,
-    );
-    if (!organization) {
-      const createOrganizationService = container.resolve(
-        CreateOrganizationService,
+    let people = undefined;
+    if (organization_id) {
+      organization = await this.organizationsRepository.findByAgendorId(
+        organization_id,
       );
-      organization = createOrganizationService.execute({
-        agendorId: organization_id,
-        partner: partnerId,
-        userId: advisorId,
-      });
+      if (!organization) {
+        const createOrganizationService = container.resolve(
+          CreateOrganizationService,
+        );
+        organization = createOrganizationService.execute({
+          agendorId: organization_id,
+          partner: partnerId,
+          userId: advisorId,
+        });
+      }
+    } else if (people_id) {
+      people = await this.peoplesRepository.findByAgendorId(people_id);
+      if (!people) {
+        const createPeoplesService = container.resolve(CreatePeopleService);
+        people = createPeoplesService.execute({
+          agendorId: people_id,
+          partner: partnerId,
+          userId: advisorId,
+        });
+      }
+    } else {
+      throw new AppError(
+        'Não foi possível linkar seu negócio à uma pessoa ou empresa',
+      );
     }
 
     let counterFee = 0;
@@ -132,6 +153,7 @@ export default class CreateDealService {
       advisorId,
       bank,
       agendorOrganizationId: organization_id,
+      agendorPeopleId: people_id,
       assFee: finalAssFee * (1 - counterFee),
       partner: partnerId
         ? partnerOpFee > 0

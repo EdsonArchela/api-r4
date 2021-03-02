@@ -20,8 +20,11 @@ class Deal {
   @JoinTable()
   user: User | Partner;
 
-  @Column()
-  agendorOrganizationId: string;
+  @Column({ nullable: true })
+  agendorOrganizationId?: string;
+
+  @Column({ nullable: true })
+  agendorPeopleId?: string;
 
   @Column()
   advisorId: string;

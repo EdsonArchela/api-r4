@@ -14,6 +14,8 @@ import PartnersRepository from '@modules/users/infra/typeorm/repositories/Partne
 import IPartnersRepository from '@modules/users/repositories/IPartnersRepository';
 import IOrganizationsRepository from '@modules/organizations/repositories/IOrganizationsRepository';
 import OrganizationsRepository from '@modules/organizations/infra/typeorm/repositories/OrganizationsRepository';
+import IPeoplesRepository from '../../modules/people/repositories/IPeoplesRepository';
+import PeoplesRepository from '../../modules/people/infra/typeorm/repositories/PeoplesRepository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -43,4 +45,9 @@ container.registerSingleton<IPartnersRepository>(
 container.registerSingleton<IOrganizationsRepository>(
   'OrganizationsRepository',
   OrganizationsRepository,
+);
+
+container.registerSingleton<IPeoplesRepository>(
+  'PeoplesRepository',
+  PeoplesRepository,
 );
