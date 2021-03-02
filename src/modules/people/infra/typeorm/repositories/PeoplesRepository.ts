@@ -1,4 +1,5 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, In, Repository } from 'typeorm';
+import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
 import IPeopleDTO from '../../../dtos/IPeopleDTO';
 import IPeoplesRepository from '../../../repositories/IPeoplesRepository';
 import People from '../entities/People';
@@ -25,6 +26,13 @@ export default class PeoplesRepository implements IPeoplesRepository {
       .where('ownerUser.id = :userId', { userId: id })
       .execute();
     return people;
+  }
+
+  public async findByListOfAgendorIds(ids: string[]): Promise<People[]> {
+    const peoples = await this.ormRepository.find({
+      where: { agendor_id: In(ids) },
+    });
+    return peoples;
   }
 
   public async findByAgendorId(id: string): Promise<People | undefined> {
