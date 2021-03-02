@@ -43,6 +43,9 @@ export default class ListUserDealsService {
         item => deal.agendorOrganizationId === item.agendor_id,
       ),
     }));
+
+    if (user?.roles?.find(role => role.name === 'ROLE_MESA'))
+      return org_deals.map(({ assFee, ...rest }) => rest);
     return org_deals;
   }
 }
