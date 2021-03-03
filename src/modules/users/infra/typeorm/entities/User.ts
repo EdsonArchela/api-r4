@@ -5,6 +5,7 @@ import People from '@modules/people/infra/typeorm/entities/People';
 import { AbstractUser } from './AbstractUser';
 import Partner from './Partners';
 import Roles from './Roles';
+import Bank from '../../../../banks/infra/typeorm/entities/Bank';
 
 @Entity('users')
 class User extends AbstractUser {
@@ -24,6 +25,12 @@ class User extends AbstractUser {
     onUpdate: 'SET NULL',
   })
   public peoples: People[];
+
+  @OneToMany(() => Bank, (banks: Bank) => banks.ownerUser, {
+    onDelete: 'CASCADE',
+    onUpdate: 'SET NULL',
+  })
+  public banks: Bank[];
 
   @ManyToMany(() => Roles, {
     eager: true,

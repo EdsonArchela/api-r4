@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
 import Partner from '@modules/users/infra/typeorm/entities/Partners';
-import Deal from '../../../../deals/infra/typeorm/entities/Deal';
+import Deal from '@modules/deals/infra/typeorm/entities/Deal';
 
 @Entity('peoples')
 export default class People {

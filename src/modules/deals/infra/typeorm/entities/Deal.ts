@@ -89,6 +89,15 @@ class Deal {
   @Column('float8', { nullable: true })
   partner?: number;
 
+  @Column({ nullable: true })
+  invoice: string;
+
+  @Column({ nullable: true })
+  contractDocumment: string;
+
+  @Column({ nullable: true })
+  swift: string;
+
   @CreateDateColumn()
   created_at: Date;
 
