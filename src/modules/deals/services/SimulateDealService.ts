@@ -85,7 +85,7 @@ export default class SimulateDealService {
           cotacaoVenda: number;
         }
       | undefined;
-    if (currency !== 'USD' && bank === 'Travelex') {
+    if (bank === 'Travelex') {
       const response = await fetch(
         'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/' +
           "CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='" +
@@ -95,7 +95,7 @@ export default class SimulateDealService {
       const data = await response.json();
       ptax = data.value[0];
       const cost =
-        ptax && ptax.cotacaoVenda > client
+        ptax && (currency !== 'USD' || ptax.cotacaoVenda > client)
           ? (ptax.cotacaoVenda * clientContract()) / client
           : clientContract();
       contract = cost;
