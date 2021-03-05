@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { errors, isCelebrateError } from 'celebrate';
+import uploadConfig from '@config/upload';
 
 import 'express-async-errors';
 
@@ -16,6 +17,8 @@ const app = express();
 
 app.use(cors({ origin: process.env.APP_CORS_IPS?.split(';') }));
 app.use(express.json({ limit: '50mb' }));
+if (process.env.NODE_ENV === 'development')
+  app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes);
 app.use(errors());
 

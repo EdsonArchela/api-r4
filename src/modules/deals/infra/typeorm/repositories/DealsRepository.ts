@@ -18,6 +18,13 @@ export default class DealsRepository implements IDealsRepository {
     return deal;
   }
 
+  public async save(data: Deal): Promise<Deal> {
+    const { updated_at, ...toUpdate } = data;
+    const saved = await this.ormRepository.save(toUpdate);
+    console.log(data, saved);
+    return saved;
+  }
+
   public async findAll(): Promise<Deal[]> {
     const deals = await this.ormRepository.find();
     return deals;
@@ -28,5 +35,10 @@ export default class DealsRepository implements IDealsRepository {
       where: { advisorId: userId },
     });
     return deals;
+  }
+
+  public async findById(id: string): Promise<Deal | undefined> {
+    const deal = await this.ormRepository.findOne(id);
+    return deal;
   }
 }

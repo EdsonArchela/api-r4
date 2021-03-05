@@ -56,6 +56,9 @@ class Deal {
   @Column('float8', { default: 0 })
   spread: number;
 
+  @Column('float8', { default: 0 })
+  otcQuote: number;
+
   @Column('float8')
   iof: number;
 
@@ -90,13 +93,13 @@ class Deal {
   partner?: number;
 
   @Column({ nullable: true })
-  invoice: string;
+  invoice?: string;
 
   @Column({ nullable: true })
-  contractDocumment: string;
+  contractDocumment?: string;
 
   @Column({ nullable: true })
-  swift: string;
+  swift?: string;
 
   @CreateDateColumn()
   created_at: Date;

@@ -170,6 +170,7 @@ export default class CreateDealService {
       flow,
       iof,
       ir,
+      otcQuote: otc,
       operationType,
       ptax1: simulatedData.ptaxD1 || 0,
       ptax2,

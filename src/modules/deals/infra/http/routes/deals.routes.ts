@@ -3,6 +3,8 @@ import { Router } from 'express';
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import DealsController from '../controllers/DealsController';
 import is from '@modules/users/infra/http/middlewares/permissions';
+import uploadConfig from '@config/upload';
+import multer from 'multer';
 
 const dealsRouter = Router();
 const dealsController = new DealsController();
@@ -70,6 +72,8 @@ dealsRouter.get(
 
 dealsRouter.get('/user', dealsController.getUserDeals);
 
+dealsRouter.get('/', dealsController.get);
+
 dealsRouter.post(
   '/simulate',
   celebrate({
@@ -103,4 +107,19 @@ dealsRouter.post(
   }),
   dealsController.simulate,
 );
+
+const upload = multer(uploadConfig.multer);
+
+dealsRouter.patch(
+  '/update',
+  upload.fields([
+    { name: 'invoice', maxCount: 2 },
+    { name: 'contract' },
+    { name: 'swift' },
+  ]),
+  dealsController.update,
+);
+
+dealsRouter.get('/file/download', dealsController.getDownloadLink);
+
 export default dealsRouter;

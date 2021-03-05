@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateDealService from '../../../services/CreateDealService';
+import DownloadFileService from '../../../services/DownloadFileService';
+import GetDealService from '../../../services/GetDealService';
 import ListAllDealsService from '../../../services/ListDeasService';
 import ListUserDealsService from '../../../services/ListUserDealsService';
 import SimulateDealService from '../../../services/SimulateDealService';
+import UploadFilesService from '../../../services/UploadFilesService';
 
 export default class DealsController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -23,6 +26,13 @@ export default class DealsController {
     const listAllDealsService = container.resolve(ListAllDealsService);
     const deals = await listAllDealsService.execute();
     return response.json(deals);
+  }
+
+  public async get(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+    const getDealService = container.resolve(GetDealService);
+    const deal = await getDealService.execute(id);
+    return response.json(deal);
   }
 
   public async getUserDeals(
@@ -50,5 +60,43 @@ export default class DealsController {
     });
 
     return response.json(result);
+  }
+
+  public async update(request: Request, response: Response): Promise<Response> {
+    const { dealId } = request.body;
+    const files = request.files as {
+      invoice: Express.Multer.File[];
+      contract: Express.Multer.File[];
+      swift: Express.Multer.File[];
+    };
+
+    const uploadFiles = container.resolve(UploadFilesService);
+
+    const updatedDeal = await uploadFiles.execute(
+      request.user.id,
+      dealId,
+      files,
+    );
+
+    return response.json(updatedDeal);
+  }
+
+  public async getDownloadLink(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { dealId, fileName } = request.query as {
+      dealId: string;
+      fileName: string;
+    };
+
+    const downloadFiles = container.resolve(DownloadFileService);
+    const link = await downloadFiles.execute({
+      userId: request.user.id,
+      dealId,
+      fileName,
+    });
+
+    return response.json(link);
   }
 }

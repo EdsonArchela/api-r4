@@ -19,6 +19,7 @@ export default interface ICreateUserDTO {
   spread: number;
   cet: number;
   iof: number;
+  otcQuote: number;
   ptax1: number;
   ptax2: number;
   ir: number;
