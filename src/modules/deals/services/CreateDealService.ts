@@ -91,7 +91,7 @@ export default class CreateDealService {
         const createOrganizationService = container.resolve(
           CreateOrganizationService,
         );
-        organization = createOrganizationService.execute({
+        organization = await createOrganizationService.execute({
           agendorId: organization_id,
           partner: partnerId,
           userId: advisorId,
@@ -101,7 +101,7 @@ export default class CreateDealService {
       people = await this.peoplesRepository.findByAgendorId(people_id);
       if (!people) {
         const createPeoplesService = container.resolve(CreatePeopleService);
-        people = createPeoplesService.execute({
+        people = await createPeoplesService.execute({
           agendorId: people_id,
           partner: partnerId,
           userId: advisorId,

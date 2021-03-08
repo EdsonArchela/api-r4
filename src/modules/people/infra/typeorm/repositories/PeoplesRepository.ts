@@ -18,6 +18,11 @@ export default class PeoplesRepository implements IPeoplesRepository {
     return people;
   }
 
+  public async findById(id: string): Promise<People | undefined> {
+    const people = await this.ormRepository.findOne(id);
+    return people;
+  }
+
   public async findByUserId(id: string): Promise<People | undefined> {
     const people = await this.ormRepository
       .createQueryBuilder('org')

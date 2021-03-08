@@ -22,4 +22,11 @@ export default class BanksRepository implements IBanksRepository {
     const bank = await this.ormRepository.findOne({ where: { iban: iban } });
     return bank;
   }
+
+  public async findById(id: string): Promise<Bank | undefined> {
+    const bank = await this.ormRepository.findOne({
+      where: { agendorId: id },
+    });
+    return bank;
+  }
 }

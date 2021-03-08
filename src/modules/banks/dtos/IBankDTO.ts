@@ -1,7 +1,9 @@
-import User from '../../users/infra/typeorm/entities/User';
+import { Organization } from 'aws-sdk/clients/organizations';
+import { DeepPartial } from 'typeorm';
+import People from '../../people/infra/typeorm/entities/People';
 
 export default interface IBankDTO {
-  ownerUser: User;
+  agendorId: string;
 
   name: 'Travelex' | 'Ourinvest' | 'Frente';
 

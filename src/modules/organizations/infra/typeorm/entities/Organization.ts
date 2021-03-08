@@ -5,6 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -12,6 +13,7 @@ import {
 import User from '@modules/users/infra/typeorm/entities/User';
 import Partner from '@modules/users/infra/typeorm/entities/Partners';
 import Deal from '../../../../deals/infra/typeorm/entities/Deal';
+import Bank from '../../../../banks/infra/typeorm/entities/Bank';
 
 @Entity('organizations')
 export default class Organization {

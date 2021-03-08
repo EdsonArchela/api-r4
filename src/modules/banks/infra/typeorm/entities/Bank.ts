@@ -7,17 +7,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
+import People from '../../../../people/infra/typeorm/entities/People';
+import Organization from '../../../../organizations/infra/typeorm/entities/Organization';
 
 @Entity('banks')
 export default class Bank {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (ownerUser: User) => ownerUser.banks, {
-    onDelete: 'CASCADE',
-    onUpdate: 'SET NULL',
-  })
-  public ownerUser: User;
+  @Column()
+  agendorId: string;
 
   @Column()
   name: 'Travelex' | 'Ourinvest' | 'Frente';

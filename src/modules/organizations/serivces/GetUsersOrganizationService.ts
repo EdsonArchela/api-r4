@@ -28,6 +28,9 @@ class GetUsersOrganizationService {
         user.agendor_id ? `userOwner=${user.agendor_id}&` : ''
       }per_page=100&${name ? `name=${name}` : `cnpj=${cnpj}`}`,
     );
+    //TODO: o parceiro deve ser retornado dentro da empresa correspondete
+    //do jeito que está dará problemas
+    //melhorar o retorno desta função
     return { ...data, partner: organizations?.partner };
   }
 }

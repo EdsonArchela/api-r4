@@ -26,12 +26,6 @@ class User extends AbstractUser {
   })
   public peoples: People[];
 
-  @OneToMany(() => Bank, (banks: Bank) => banks.ownerUser, {
-    onDelete: 'CASCADE',
-    onUpdate: 'SET NULL',
-  })
-  public banks: Bank[];
-
   @ManyToMany(() => Roles, {
     eager: true,
     cascade: true,
