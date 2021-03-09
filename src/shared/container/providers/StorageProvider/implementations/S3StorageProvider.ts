@@ -26,11 +26,12 @@ class S3StorageProvider implements IStorageProvider {
   public async saveFiles(files: string[], dest: string): Promise<string[]> {
     const savedFiles: string[] = [];
 
-    files.forEach(async file => {
+    const promises = files.map(async file => {
       const saved = await this.saveFile(file, dest);
 
       savedFiles.push(saved);
     });
+    await Promise.all(promises);
     return savedFiles;
   }
 
