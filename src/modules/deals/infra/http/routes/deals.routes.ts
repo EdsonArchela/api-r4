@@ -114,7 +114,7 @@ dealsRouter.patch(
   '/update',
   upload.fields([
     { name: 'invoice', maxCount: 2 },
-    { name: 'contract' },
+    { name: 'contractDocument' },
     { name: 'swift' },
   ]),
   dealsController.update,
