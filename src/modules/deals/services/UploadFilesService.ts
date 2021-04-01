@@ -23,7 +23,7 @@ export default class UploadFilesService {
     dealId: string,
     files: {
       invoice?: Express.Multer.File[];
-      contract?: Express.Multer.File[];
+      contractDocumment?: Express.Multer.File[];
       swift?: Express.Multer.File[];
     },
   ): Promise<Deal> {
@@ -43,9 +43,9 @@ export default class UploadFilesService {
         `${userId}/${dealId}/invoice`,
       );
     let contractFileName;
-    if (files.contract)
+    if (files.contractDocumment)
       contractFileName = await this.storageProvider.saveFile(
-        files.contract[0].filename,
+        files.contractDocumment[0].filename,
         `${userId}/${dealId}/contract`,
       );
     let swiftFileName;

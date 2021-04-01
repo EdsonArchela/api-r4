@@ -66,7 +66,7 @@ export default class DealsController {
     const { dealId } = request.body;
     const files = request.files as {
       invoice: Express.Multer.File[];
-      contract: Express.Multer.File[];
+      contractDocumment: Express.Multer.File[];
       swift: Express.Multer.File[];
     };
 
