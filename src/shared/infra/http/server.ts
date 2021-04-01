@@ -18,7 +18,6 @@ const app = express();
 app.use(
   cors({
     origin: process.env.APP_CORS_IPS?.split(';'),
-    allowedHeaders: 'X-Requested-With, Accept, Content-Type',
   }),
 );
 app.use(express.json({ limit: '50mb' }));
