@@ -57,9 +57,9 @@ export default class UploadFilesService {
 
     const updatedDeal = await this.dealsRepository.save({
       ...deal,
-      contractDocumment: contractFileName,
-      swift: swiftFileName,
-      invoice: invoiceFilesNames?.join('|'),
+      contractDocumment: contractFileName || deal.contractDocumment,
+      swift: swiftFileName || deal.swift,
+      invoice: invoiceFilesNames?.join('|') || deal.invoice,
     });
 
     return updatedDeal;

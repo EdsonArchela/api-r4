@@ -17,4 +17,11 @@ export default class SessionsController {
 
     return response.json({ user: classToClass(user), token });
   }
+
+  public async authorized(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    return response.status(204).json();
+  }
 }
