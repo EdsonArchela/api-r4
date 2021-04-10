@@ -146,7 +146,7 @@ export default class CreateDealService {
     const discount = contract - simulatedData.contract;
 
     const finalAssFee =
-      (simulatedData.assFee - discount) /
+      (simulatedData.assFee + discount) /
       ((1 + partnerOpFee) * (1 + partnerIndFee));
 
     const deal = await this.dealsRepository.create({
