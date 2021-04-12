@@ -78,7 +78,9 @@ dealsRouter.post(
   '/simulate',
   celebrate({
     [Segments.BODY]: {
-      bank: Joi.string().valid('Travelex', 'OurInvest', 'Frente').required(),
+      bank: Joi.string()
+        .valid('travelex', 'ourinvest', 'moneycorp', 'frente')
+        .required(),
       currency: Joi.string()
         .valid('USD', 'EUR', 'GBP', 'JPY', 'CHF')
         .required(),
