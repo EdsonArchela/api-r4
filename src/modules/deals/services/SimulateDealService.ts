@@ -97,7 +97,7 @@ export default class SimulateDealService {
       const data = await response.json();
       ptax = data.value[0];
       const cost =
-        ptax && (currency !== 'USD' || ptax.cotacaoVenda > client)
+        ptax && (currency !== 'USD')
           ? (ptax.cotacaoVenda * clientContract()) / client
           : clientContract();
       contract = cost;
