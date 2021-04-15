@@ -66,8 +66,6 @@ export default class SimulateDealService {
 
     const client = direction ? otc - spread : otc + spread;
 
-    console.log(bank);
-
     const clientContract = () => {
       switch (bank) {
         case 'ourinvest':
