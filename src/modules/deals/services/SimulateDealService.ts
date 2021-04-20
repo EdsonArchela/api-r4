@@ -87,7 +87,7 @@ export default class SimulateDealService {
           cotacaoVenda: number;
         }
       | undefined;
-
+console.log('SIMULATEDEALSERVICE LOG',bank)
     if (bank === 'travelex' || bank === 'moneycorp') {
       const response = await fetch(
         'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/' +
