@@ -97,8 +97,14 @@ export default class SimulateDealService {
       );
       const data = await response.json();
       ptax = data.value[0];
-      
-      console.log('SIMULATEDEALSERVICE LOG',bank, currency, ptax);
+
+      console.log(
+        'SIMULATEDEALSERVICE LOG',
+        bank,
+        currency,
+        ptax,
+        ptax && currency !== 'USD',
+      );
       const cost =
         ptax && currency !== 'USD'
           ? (ptax.cotacaoVenda * clientContract()) / client
@@ -124,7 +130,7 @@ export default class SimulateDealService {
     return {
       clientQuote: client,
       contract,
-      ptaxD1: ptax?.cotacaoVenda && undefined,
+      ptaxD1: ptax?.cotacaoVenda || undefined,
       cet: darf ? (direction ? cet + m_ir : cet - m_ir) : cet,
       assFee,
       darf: darf ? m_ir : 0,
