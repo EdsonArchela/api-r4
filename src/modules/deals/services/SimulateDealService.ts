@@ -28,8 +28,8 @@ interface IResponse {
   darf?: number;
 }
 
-function getPreviousWorkday(): moment.Moment {
-  const workday = moment();
+function getPreviousWorkday(modifier?: string): moment.Moment {
+  const workday = modifier ? moment().subtract(1, 'days') : moment();
   const day = workday.day();
   let diff = 1; // returns yesterday
   if (day === 0 || day === 1) {
@@ -66,6 +66,19 @@ export default class SimulateDealService {
 
     const client = direction ? otc - spread : otc + spread;
 
+    const fetchPtax = async (
+      date: string,
+    ): Promise<{ cotacaoVenda: number }> => {
+      const response = await fetch(
+        'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/' +
+          "CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='" +
+          date +
+          "'&$top=100&$format=json&$select=cotacaoVenda",
+      );
+      const data = await response.json();
+      return data.value[0];
+    };
+
     const clientContract = () => {
       switch (bank) {
         case 'ourinvest':
@@ -89,14 +102,12 @@ export default class SimulateDealService {
       | undefined;
 
     if (bank === 'travelex' || bank === 'moneycorp') {
-      const response = await fetch(
-        'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/' +
-          "CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='" +
-          getPreviousWorkday().format('MM-DD-YYYY') +
-          "'&$top=100&$format=json&$select=cotacaoVenda",
-      );
-      const data = await response.json();
-      ptax = data.value[0];
+      ptax = await fetchPtax(getPreviousWorkday().format('MM-DD-YYYY'));
+      if (!ptax) {
+        ptax = await fetchPtax(
+          getPreviousWorkday('older').format('MM-DD-YYYY'),
+        );
+      }
 
       console.log(
         'SIMULATEDEALSERVICE LOG',
