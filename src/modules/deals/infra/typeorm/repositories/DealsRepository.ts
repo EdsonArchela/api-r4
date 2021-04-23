@@ -26,7 +26,11 @@ export default class DealsRepository implements IDealsRepository {
   }
 
   public async findAll(): Promise<Deal[]> {
-    const deals = await this.ormRepository.find();
+    const deals = await this.ormRepository.find({
+      order: {
+        created_at: 'DESC',
+      },
+    });
     return deals;
   }
 

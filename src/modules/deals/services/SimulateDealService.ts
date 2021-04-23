@@ -102,6 +102,7 @@ export default class SimulateDealService {
       | undefined;
 
     if (bank === 'travelex' || bank === 'moneycorp') {
+      // TODO: Melhorar lógia para o feriado
       ptax = await fetchPtax(getPreviousWorkday().format('MM-DD-YYYY'));
       if (!ptax) {
         ptax = await fetchPtax(
