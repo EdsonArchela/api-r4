@@ -124,4 +124,6 @@ dealsRouter.patch(
 
 dealsRouter.get('/file/download', dealsController.getDownloadLink);
 
+dealsRouter.delete('/file/delete', dealsController.deleteFile);
+
 export default dealsRouter;

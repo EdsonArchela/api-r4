@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateDealService from '../../../services/CreateDealService';
+import DeleteFileService from '../../../services/DeleteFileService';
 import DownloadFileService from '../../../services/DownloadFileService';
 import GetDealService from '../../../services/GetDealService';
 import ListAllDealsService from '../../../services/ListDeasService';
@@ -98,5 +99,26 @@ export default class DealsController {
     });
 
     return response.json(link);
+  }
+
+  public async deleteFile(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { dealId, fileName, folderType } = request.query as {
+      dealId: string;
+      fileName: string;
+      folderType: 'contract' | 'invoice' | 'swift';
+    };
+
+    const deleteService = container.resolve(DeleteFileService);
+
+    const deal = await deleteService.execute({
+      userId: request.user.id,
+      dealId,
+      fileName,
+      folderType,
+    });
+    return response.json(deal);
   }
 }
