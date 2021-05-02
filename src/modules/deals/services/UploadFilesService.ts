@@ -44,21 +44,33 @@ export default class UploadFilesService {
       );
     let contractFileName;
     if (files.contractDocumment)
-      contractFileName = await this.storageProvider.saveFile(
-        files.contractDocumment[0].filename,
+      contractFileName = await this.storageProvider.saveFiles(
+        files.contractDocumment.map(file => file.filename),
         `${userId}/${dealId}/contract`,
       );
     let swiftFileName;
     if (files.swift)
-      swiftFileName = await this.storageProvider.saveFile(
-        files.swift[0].filename,
+      swiftFileName = await this.storageProvider.saveFiles(
+        files.swift.map(file => file.filename),
         `${userId}/${dealId}/swift`,
       );
+    // let contractFileName;
+    // if (files.contractDocumment)
+    //   contractFileName = await this.storageProvider.saveFile(
+    //     files.contractDocumment[0].filename,
+    //     `${userId}/${dealId}/contract`,
+    //   );
+    // let swiftFileName;
+    // if (files.swift)
+    //   swiftFileName = await this.storageProvider.saveFile(
+    //     files.swift[0].filename,
+    //     `${userId}/${dealId}/swift`,
+    //   );
 
     const updatedDeal = await this.dealsRepository.save({
       ...deal,
-      contractDocumment: contractFileName || deal.contractDocumment,
-      swift: swiftFileName || deal.swift,
+      contractDocumment: contractFileName?.join('|') || deal.contractDocumment,
+      swift: swiftFileName?.join('|') || deal.swift,
       invoice: invoiceFilesNames?.join('|') || deal.invoice,
     });
 
