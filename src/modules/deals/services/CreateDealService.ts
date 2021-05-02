@@ -10,6 +10,8 @@ import IUsersRepository from '../../users/repositories/IUsersRepository';
 import Deal from '../infra/typeorm/entities/Deal';
 import IDealsRepository from '../repositories/IDealsRepository';
 import SimulateDealService from './SimulateDealService';
+import agendor_api from '../../../services/agendor_api';
+import moment from 'moment';
 
 interface IRequest {
   organization_id?: string;
@@ -69,11 +71,14 @@ export default class CreateDealService {
     darf,
   }: IRequest): Promise<Deal> {
     const user = await this.usersRepository.findById(user_id);
+
     let partner;
+
     if (!user) {
       partner = await this.partnerRepository.findById(user_id);
       if (!partner) throw new AppError('Usuário não encontrado');
     }
+
     if (!user && !partner) throw new AppError('Usuário não encontrado');
     const isBroker = user?.roles?.filter(
       (role: Roles) => role.name === 'ROLE_MESA',
@@ -180,6 +185,59 @@ export default class CreateDealService {
       darf: simulatedData.darf,
       partnerId,
     });
+
+    const formato = {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      style: 'currency',
+      currency: 'BRL',
+    };
+
+    const agendor_id = await this.usersRepository.findById(advisorId);
+
+    if (organization_id) {
+      await agendor_api.post(`organizations/${organization_id}/deals`, {
+        title: `Fechamento de Câmbio - ${organization_id} ${moment
+          .now()
+          .toLocaleString()}`,
+        description: `Taxa Mesa: ${otc.toLocaleString(
+          'pt-BR',
+          formato,
+        )}\nTaxa Cliente: ${(direction
+          ? otc - spread
+          : otc + spread
+        ).toLocaleString(
+          'pt-BR',
+          formato,
+        )}\nDespesas: ${contract.toLocaleString(
+          'pt-BR',
+          formato,
+        )}\nFluxo: ${flow}`,
+        ownerUser: agendor_id?.agendor_id ? parseInt(agendor_id.agendor_id) : 0,
+        value: value,
+      });
+    } else if (people_id) {
+      await agendor_api.post(`people/${people_id}/deals`, {
+        title: `Fechamento de Câmbio - ${people_id} ${moment
+          .now()
+          .toLocaleString()}`,
+        description: `Taxa Mesa: ${otc.toLocaleString(
+          'pt-BR',
+          formato,
+        )}\nTaxa Cliente: ${(direction
+          ? otc - spread
+          : otc + spread
+        ).toLocaleString(
+          'pt-BR',
+          formato,
+        )}\nDespesas: ${contract.toLocaleString(
+          'pt-BR',
+          formato,
+        )}\nFluxo: ${flow}`,
+        owneruser: Number(agendor_id?.agendor_id),
+        value: value,
+      });
+    }
 
     return deal;
   }
