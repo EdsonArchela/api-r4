@@ -187,8 +187,8 @@ export default class CreateDealService {
     });
 
     const formato = {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
       style: 'currency',
       currency: 'BRL',
     };
