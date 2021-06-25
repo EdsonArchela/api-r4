@@ -181,7 +181,7 @@ export default class CreateDealService {
           : partnerIndFee
         : 0,
       broker: counterFee,
-      cet: simulatedData.cet,
+      cet: simulatedData.cet + discount,
       contract,
       contractDiscount: discount,
       currency,
