@@ -85,6 +85,10 @@ export default class SimulateDealService {
           return 100;
         case 'moneycorp':
           return 10 * client;
+        case 'c6':
+          return 90;
+        case 'daycoval':
+          return 30 * client;
         default:
           return 50 * client;
       }
