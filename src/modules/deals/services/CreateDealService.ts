@@ -154,6 +154,21 @@ export default class CreateDealService {
       (simulatedData.assFee + discount) /
       ((1 + partnerOpFee) * (1 + partnerIndFee));
 
+    const bankFee = () => {
+      switch (bank) {
+        case 'ourinvest':
+          return 0.6;
+        case 'c6':
+          return 0.55;
+        case 'daycoval':
+          return 0.5;
+        case 'moneycorp':
+          return 0.7;
+        default:
+          return 0.5;
+      }
+    };
+
     const deal = await this.dealsRepository.create({
       advisorId,
       bank,
