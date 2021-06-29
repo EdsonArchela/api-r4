@@ -8,9 +8,11 @@ import partnersRouter from '@modules/users/infra/http/routes/partners.routes';
 import organizationRouter from '@modules/organizations/infra/http/routes/organization.routes';
 import peopleRouter from '@modules/people/infra/http/routes/people.routes';
 import bankRouter from '@modules/banks/infra/http/routes/bank.routes';
+import enterprisesRouter from '@modules/clients/infra/http/routes/enterprises.routes';
 
 const routes = Router();
 
+routes.use('/clients', enterprisesRouter);
 routes.use('/users', usersRouter);
 routes.use('/partners', partnersRouter);
 routes.use('/sessions', sessionsRouter);

@@ -19,6 +19,8 @@ import IPeoplesRepository from '@modules/people/repositories/IPeoplesRepository'
 import PeoplesRepository from '@modules/people/infra/typeorm/repositories/PeoplesRepository';
 import IBanksRepository from '@modules/banks/repositories/IBanksRepository';
 import BanksRepository from '@modules/banks/infra/typeorm/repositories/BanksRepository';
+import IEnterprisesRepository from '@modules/clients/repositories/IEnterprisesRepository';
+import EnterprisesRepository from '@modules/clients/infra/typeorm/repositories/EnterprisesRepository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -58,4 +60,9 @@ container.registerSingleton<IPeoplesRepository>(
 container.registerSingleton<IBanksRepository>(
   'BanksRepository',
   BanksRepository,
+);
+
+container.registerSingleton<IEnterprisesRepository>(
+  'EnterprisesRepository',
+  EnterprisesRepository,
 );
