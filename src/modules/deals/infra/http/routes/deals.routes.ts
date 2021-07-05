@@ -79,7 +79,7 @@ dealsRouter.post(
   celebrate({
     [Segments.BODY]: {
       bank: Joi.string()
-        .valid('travelex', 'ourinvest', 'moneycorp', 'frente')
+        .valid('travelex', 'ourinvest', 'moneycorp', 'frente', 'c6', 'daycoval')
         .required(),
       currency: Joi.string()
         .valid('USD', 'EUR', 'GBP', 'JPY', 'CHF')

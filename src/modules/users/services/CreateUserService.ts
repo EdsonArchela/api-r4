@@ -12,7 +12,7 @@ interface AgUser {
   contact: { email: string };
 }
 
-interface UsersList {
+export interface UsersList {
   data: {
     data: AgUser[];
   };
