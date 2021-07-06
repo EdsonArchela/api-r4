@@ -141,7 +141,7 @@ export default class SimulateDealService {
     if (direction) cet += -m_ir - m_iof - contract;
     else cet += m_ir + m_iof + contract;
 
-    const assFee = value * spread * (user.comission || 0);
+    const assFee = value * spread * 0.95 * (user.comission || 0);
 
     return {
       clientQuote: client,
