@@ -194,7 +194,7 @@ export default class CreateDealService {
       operationType,
       ptax1: simulatedData.ptaxD1 || 0,
       ptax2,
-      r4Fee: value * spread * bankFee() - simulatedData.assFee,
+      r4Fee: value * spread * 0.95 * bankFee() - simulatedData.assFee,
       user: user || partner,
       value,
       darf: simulatedData.darf,
